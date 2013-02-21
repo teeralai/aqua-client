@@ -1,0 +1,52 @@
+var AppRouter = Backbone.Router.extend({
+
+    routes: {
+        ""                  : "list",
+        "fishs/page/:page"	: "list",
+        "fishs/add"         : "addfish",
+        "fishs/:id"         : "fishDetails",
+        "about"             : "about"
+    },
+
+    initialize: function () {
+        this.headerView = new HeaderView();
+        $('.header').html(this.headerView.el);
+    },
+
+	list: function(page) {
+        var p = page ? parseInt(page, 10) : 1;
+        var fishList = new FishCollection();
+        fishList.fetch({success: function(){
+            $("#content").html(new fishListView({model: fishList, page: p}).el);
+        }});
+        this.headerView.selectMenuItem('home-menu');
+    },
+
+    fishDetails: function (id) {
+        var fish = new fish({id: id});
+        fish.fetch({success: function(){
+            $("#content").html(new FishView({model: fish}).el);
+        }});
+        this.headerView.selectMenuItem();
+    },
+
+	addfish: function() {
+        var fish = new fish();
+        $('#content').html(new FishView({model: fish}).el);
+        this.headerView.selectMenuItem('add-menu');
+	},
+
+    about: function () {
+        if (!this.aboutView) {
+            this.aboutView = new AboutView();
+        }
+        $('#content').html(this.aboutView.el);
+        this.headerView.selectMenuItem('about-menu');
+    }
+
+});
+
+utils.loadTemplate(['HeaderView', 'FishView', 'FishListItemView', 'AboutView'], function() {
+    app = new AppRouter();
+    Backbone.history.start();
+});

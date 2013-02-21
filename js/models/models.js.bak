@@ -1,0 +1,21 @@
+window.Fish = Backbone.Model.extend({
+    urlRoot: "api/fishs",
+
+    defaults: {
+        id: null,
+        name: "",
+        grapes: "",
+        country: "USA", 
+        region: "California",
+        year: "",
+        description: "",
+        picture: null
+    }
+    
+});
+
+window.FishCollection = Backbone.Collection.extend({
+    model: Fish,
+    url: "api/fishs"
+
+});
